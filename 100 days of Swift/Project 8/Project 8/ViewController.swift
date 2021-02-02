@@ -155,7 +155,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadLevel()
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            self?.loadLevel()
+        }
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -242,7 +245,9 @@ class ViewController: UIViewController {
     }
     
     @objc func loadLevel() {
-        score = 0
+        DispatchQueue.main.async { [weak self] in
+            self?.score = 0
+        }
         //stores all the level clues
         var clueString = ""
         //stores all the level solutions
@@ -273,16 +278,19 @@ class ViewController: UIViewController {
             }
         }
         
-        cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
-        answersLabel.text = solutuinsString.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        letterButtons.shuffle()
-        
-        if letterButtons.count == letterBits.count {
-            for i in 0..<letterButtons.count {
-                letterButtons[i].setTitle(letterBits[i], for: .normal)
+        DispatchQueue.main.async { [weak self] in
+            self?.cluesLabel.text = clueString.trimmingCharacters(in: .whitespacesAndNewlines)
+            self?.answersLabel.text = solutuinsString.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            self?.letterButtons.shuffle()
+            
+            if self?.letterButtons.count == letterBits.count {
+                for i in 0..<(self?.letterButtons.count)! {
+                    self?.letterButtons[i].setTitle(letterBits[i], for: .normal)
+                }
             }
         }
+
     }
 }
 
