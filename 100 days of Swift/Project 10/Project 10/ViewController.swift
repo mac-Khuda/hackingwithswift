@@ -21,12 +21,8 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
         let picker = UIImagePickerController()
         picker.allowsEditing = true
         picker.delegate = self
+        picker.sourceType = .camera
         present(picker, animated: true, completion: nil)
-    }
-    
-    func getDocumentsDirectory() -> URL {
-        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return path[0]
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -58,13 +54,17 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
         
         let ac = UIAlertController(title: "Rename person", message: nil, preferredStyle: .alert)
         ac.addTextField(configurationHandler: nil)
-        
-        ac.addAction(UIAlertAction(title: "Okay", style: .default, handler: { [weak self, weak ac] _ in
+
+        ac.addAction(UIAlertAction(title: "Rename", style: .default, handler: { [weak self, weak ac] _ in
             guard let newName = ac?.textFields?[0].text else { return }
             person.name = newName
             self?.collectionView.reloadData()
         }))
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        ac.addAction(UIAlertAction(title: "Delete item", style: .destructive, handler: { [weak self] _ in
+            self?.people.remove(at: indexPath.item)
+            collectionView.reloadData()
+        }))
         present(ac, animated: true, completion: nil)
     }
     
@@ -84,6 +84,11 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
         
         dismiss(animated: true, completion: nil)
         
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return path[0]
     }
 
 
