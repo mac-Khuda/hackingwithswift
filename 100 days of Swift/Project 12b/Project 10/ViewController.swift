@@ -10,11 +10,22 @@ import UIKit
 class ViewController: UICollectionViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     
     var people = [Person]()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPerson))
+        
+        let defaults = UserDefaults.standard
+        if let savedPeople = defaults.object(forKey: "People") as? Data {
+            let jsonDecoder = JSONDecoder()
+            
+            do {
+                people = try jsonDecoder.decode([Person].self, from: savedPeople)
+            } catch {
+                print("failed to load people")
+            }
+        }
     }
     
     @objc func addNewPerson() {
@@ -45,7 +56,7 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
         cell.imageView.layer.borderWidth = 2
         cell.imageView.layer.cornerRadius = 3
         cell.layer.cornerRadius = 7
-
+        
         return cell
     }
     
@@ -54,10 +65,11 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
         
         let ac = UIAlertController(title: "Rename person", message: nil, preferredStyle: .alert)
         ac.addTextField(configurationHandler: nil)
-
+        
         ac.addAction(UIAlertAction(title: "Rename", style: .default, handler: { [weak self, weak ac] _ in
             guard let newName = ac?.textFields?[0].text else { return }
             person.name = newName
+            self?.save()
             self?.collectionView.reloadData()
         }))
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -80,6 +92,7 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
         
         let person = Person(name: "Unknown", image: imageName)
         people.append(person)
+        save()
         collectionView.reloadData()
         
         dismiss(animated: true, completion: nil)
@@ -90,7 +103,19 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
         let path = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return path[0]
     }
-
-
+    
+    func save() {
+        let jsonEncoder = JSONEncoder()
+        
+        if let savedData = try? jsonEncoder.encode(people) {
+            let defaults = UserDefaults.standard
+            defaults.set(savedData, forKey: "People")
+        } else {
+            print("failed to save people")
+        }
+        
+    }
+    
+    
 }
 

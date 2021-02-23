@@ -9,6 +9,8 @@ import UIKit
 
 class ViewController: UITableViewController {
     
+    let defaults = UserDefaults.standard
+    
     var allWords = [String]()
     var usedWords = [String]()
     
@@ -28,10 +30,14 @@ class ViewController: UITableViewController {
         }
         
         startGame()
+        
+        title = defaults.string(forKey: "title")
+        usedWords = defaults.object(forKey: "usedWords") as? [String] ?? [String]()
     }
     
     @objc func startGame() {
-        title = allWords.randomElement()
+        let wordForTitle = allWords.randomElement()
+        title = wordForTitle
         usedWords.removeAll(keepingCapacity: true)
         tableView.reloadData()
     }
@@ -56,6 +62,8 @@ class ViewController: UITableViewController {
             if isOriginal(word: lowerAnswer) {
                 if isReal(word: lowerAnswer) {
                     usedWords.insert(lowerAnswer, at: 0)
+                    defaults.set(usedWords, forKey: "usedWords")
+                    defaults.set(title, forKey: "title")
                     
                     let indexPath = IndexPath(row: 0, section: 0)
                     tableView.insertRows(at: [indexPath], with: .automatic)

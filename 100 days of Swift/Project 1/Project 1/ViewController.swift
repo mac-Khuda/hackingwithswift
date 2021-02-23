@@ -8,7 +8,7 @@
 import UIKit
 
 class ViewController: UITableViewController {
-    var pictures = [String]()
+    var pictures = [Picture]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,8 +19,13 @@ class ViewController: UITableViewController {
         
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.loadPictures()
+            self?.load()
         }
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
     }
     
     func loadPictures() {
@@ -30,10 +35,11 @@ class ViewController: UITableViewController {
         
         for item in items {
             if item.hasPrefix("nssl") {
-                pictures.append(item)
+                let picture = Picture(name: item, timesShowed: 0)
+                pictures.append(picture)
             }
         }
-        pictures.sort()
+        //        pictures.sort()
         DispatchQueue.main.async { [weak self] in
             self?.tableView.reloadData()
         }
@@ -45,16 +51,19 @@ class ViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = pictures[indexPath.row]
+        cell.textLabel?.text = pictures[indexPath.row].name
+        cell.detailTextLabel?.text = "Image showed: \(pictures[indexPath.row].timesShowed)"
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        pictures[indexPath.row].timesShowed += 1
         if let vc = storyboard?.instantiateViewController(identifier: "Detail") as? DetailViewController {
             vc.selectedImage = pictures[indexPath.row]
             vc.navigationItem.title = "Picture \(indexPath.row + 1) of \(pictures.count)"
             navigationController?.pushViewController(vc, animated: true)
         }
+        save()
     }
     
     @objc func recomendApp() {
@@ -63,6 +72,26 @@ class ViewController: UITableViewController {
         let vc = UIActivityViewController(activityItems: [recomendation], applicationActivities: [])
         vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
         present(vc, animated: true, completion: nil)
+    }
+    
+    func save() {
+        let jsonEncoder = JSONEncoder()
+        if let savedData = try? jsonEncoder.encode(pictures) {
+            let defaults = UserDefaults.standard
+            defaults.set(savedData, forKey: "Pictures")
+        }
+    }
+    
+    func load() {
+        let jsonDecoder = JSONDecoder()
+        let defaults = UserDefaults.standard
+        if let savedData = defaults.object(forKey: "Pictures") as? Data {
+            do {
+                pictures = try jsonDecoder.decode([Picture].self, from: savedData)
+            } catch {
+                print("Error with loading data: \(error)")
+            }
+        }
     }
     
 }
