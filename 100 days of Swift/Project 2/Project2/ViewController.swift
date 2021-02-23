@@ -48,6 +48,14 @@ class ViewController: UIViewController {
         button2.setImage(UIImage(named: countries[1]), for: .normal)
         button3.setImage(UIImage(named: countries[2]), for: .normal)
         
+        UIView.animate(withDuration: 1) {
+            self.button1.transform = .identity
+            self.button2.transform = .identity
+            self.button3.transform = .identity
+        } completion: { finished in
+            
+        }
+        
         title = "\(countries[correctAnswer].uppercased()) | Your score: \(score)"
     }
     
@@ -58,7 +66,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func buttonTapped(_ sender: UIButton) {
-        var title: String
+        var title: String = "Answer"
         questionScore += 1
         
         if questionScore == 10 {
@@ -80,20 +88,25 @@ class ViewController: UIViewController {
             present(ac, animated: true, completion: nil)
             
         }
-        
-        if sender.tag == correctAnswer {
-            title = "Correct"
-            score += 1
-            allTimeSocre += 1
-            askQuestion()
-        } else {
-            title = "Wrong"
-            score -= 1
-            allTimeSocre -= 1
-            let ac = UIAlertController(title: title, message: "Wrong flag! This is flag of \(countries[sender.tag].capitalized)...", preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
-            present(ac, animated: true, completion: nil)
+
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 5, options: []) {
+            sender.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        } completion: { finished in
+            if sender.tag == self.correctAnswer {
+                self.title = "Correct"
+                self.score += 1
+                self.allTimeSocre += 1
+                self.askQuestion()
+            } else {
+                title = "Wrong"
+                self.score -= 1
+                self.allTimeSocre -= 1
+                let ac = UIAlertController(title: title, message: "Wrong flag! This is flag of \(self.countries[sender.tag].capitalized)...", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: self.askQuestion))
+                self.present(ac, animated: true, completion: nil)
+            }
         }
+        
     }
 }
 
