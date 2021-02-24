@@ -1,0 +1,16 @@
+[
+	{
+		"countryName": "Ukraine",
+		"capital": "Kyiv",
+		"size": 603628,
+		"population": 41588354,
+		"currency": "Hryvnia"
+	},
+	{
+		"countryName": "United States of America",
+		"capital": "Washington",
+		"size": 9833520,
+		"population": 328239523,
+		"currency": "Unites States Dollar"
+	}
+]
