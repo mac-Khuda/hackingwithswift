@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A36ABEB25E8F6A300FCF607 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A36ABEA25E8F6A300FCF607 /* WebViewController.swift */; };
 		4A90BADA25E7F4D200C3B9FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A90BAD925E7F4D200C3B9FB /* AppDelegate.swift */; };
 		4A90BADC25E7F4D200C3B9FB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A90BADB25E7F4D200C3B9FB /* SceneDelegate.swift */; };
 		4A90BADE25E7F4D200C3B9FB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A90BADD25E7F4D200C3B9FB /* ViewController.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4A36ABEA25E8F6A300FCF607 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		4A90BAD625E7F4D200C3B9FB /* Project 16.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Project 16.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A90BAD925E7F4D200C3B9FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A90BADB25E7F4D200C3B9FB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 				4A90BAD925E7F4D200C3B9FB /* AppDelegate.swift */,
 				4A90BADB25E7F4D200C3B9FB /* SceneDelegate.swift */,
 				4A90BADD25E7F4D200C3B9FB /* ViewController.swift */,
+				4A36ABEA25E8F6A300FCF607 /* WebViewController.swift */,
 				4A90BAF025E7F94800C3B9FB /* Capital.swift */,
 				4A90BADF25E7F4D200C3B9FB /* Main.storyboard */,
 				4A90BAE225E7F4D500C3B9FB /* Assets.xcassets */,
@@ -143,6 +146,7 @@
 				4A90BADE25E7F4D200C3B9FB /* ViewController.swift in Sources */,
 				4A90BADA25E7F4D200C3B9FB /* AppDelegate.swift in Sources */,
 				4A90BAF125E7F94800C3B9FB /* Capital.swift in Sources */,
+				4A36ABEB25E8F6A300FCF607 /* WebViewController.swift in Sources */,
 				4A90BADC25E7F4D200C3B9FB /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
