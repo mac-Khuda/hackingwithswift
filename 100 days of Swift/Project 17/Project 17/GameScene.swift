@@ -23,6 +23,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    var spownTime = 0.9
+    var enemiesSpowned = 0
+    
     override func didMove(to view: SKView) {
         backgroundColor = .black
         
@@ -48,11 +51,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.gravity = .zero
         physicsWorld.contactDelegate = self
         
-        gameTimer = Timer.scheduledTimer(timeInterval: 0.35, target: self, selector: #selector(createEnemy), userInfo: nil, repeats: true)
+        launchTimer()
         
     }
     
     @objc func createEnemy() {
+        enemiesSpowned += 1
+        
         guard let enemy = possibleEnemies.randomElement() else { return }
         
         let sprite = SKSpriteNode(imageNamed: enemy)
@@ -65,6 +70,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         sprite.physicsBody?.angularVelocity = 5
         sprite.physicsBody?.linearDamping = 0
         sprite.physicsBody?.angularDamping = 0
+        
+        if enemiesSpowned % 20 == 0 {
+            spownTime -= 0.1
+            gameTimer?.invalidate()
+            launchTimer()
+        }
         
     }
     
@@ -92,6 +103,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.position = location
     }
     
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        var location = touch.location(in: self)
+        
+        if location.y < 100 {
+            location.y = 100
+        } else if location.y > 668 {
+            location.y = 668
+        }
+        
+        player.position = location
+    }
+    
     func didBegin(_ contact: SKPhysicsContact) {
  
         let explosion = SKEmitterNode(fileNamed: "explosion")!
@@ -99,7 +123,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(explosion)
         
         player.removeFromParent()
+        gameTimer?.invalidate()
+        starField.removeFromParent()
         isGameOver = true
+    }
+    
+    func launchTimer() {
+        gameTimer = Timer.scheduledTimer(timeInterval: spownTime, target: self, selector: #selector(createEnemy), userInfo: nil, repeats: true)
     }
     
 }
