@@ -22,6 +22,8 @@ class DetailViewController: UIViewController {
         if let imageToLoad = selectedImage?.name {
             imageView.image = UIImage(named: imageToLoad)
         }
+        
+        assert(imageView.image != nil, "Image didn't load!")
 
     }
     
