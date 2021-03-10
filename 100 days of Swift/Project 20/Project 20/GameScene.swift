@@ -13,14 +13,20 @@ class GameScene: SKScene {
     
     var fireworks = [SKNode]()
     
+    var rocketsLaucnhed = 0
+    
     let leftEdge = -22
     let bottomEdge = -22
     let rightEdge = 1024 + 22
     
+    var scoreLabel: SKLabelNode!
+    
     var score = 0 {
         didSet {
+            scoreLabel.text = "Score: \(score)"
             
         }
+        
     }
     
     override func didMove(to view: SKView) {
@@ -31,6 +37,12 @@ class GameScene: SKScene {
         addChild(background)
         
         gameTimer = Timer.scheduledTimer(timeInterval: 6, target: self, selector: #selector(launchFireworks), userInfo: name, repeats: true)
+        
+        scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
+        scoreLabel.text = "Score: 0"
+        scoreLabel.position = CGPoint(x: 8, y: 8)
+        scoreLabel.horizontalAlignmentMode = .left
+        addChild(scoreLabel)
         
     }
     
@@ -46,10 +58,13 @@ class GameScene: SKScene {
         switch Int.random(in: 0...2) {
         case 0:
             firework.color = .cyan
+            
         case 1:
             firework.color = .green
+            
         default:
             firework.color = .red
+            
         }
         
         let path = UIBezierPath()
@@ -61,6 +76,7 @@ class GameScene: SKScene {
         if let emitter = SKEmitterNode(fileNamed: "fuse") {
             emitter.position = CGPoint(x: 0, y: -22)
             node.addChild(emitter)
+            
         }
         
         fireworks.append(node)
@@ -69,6 +85,12 @@ class GameScene: SKScene {
     }
     
     @objc func launchFireworks() {
+        rocketsLaucnhed += 1
+        
+        if rocketsLaucnhed == 5 {
+            gameTimer?.invalidate()
+        }
+        
         let movementAmount: CGFloat = 1800
         
         switch Int.random(in: 0...3) {
@@ -125,23 +147,26 @@ class GameScene: SKScene {
                 if firework.name == "selected" && firework.color != node.color {
                     firework.name = "firework"
                     firework.colorBlendFactor = 1
+                    
                 }
             }
-            
             node.name = "selected"
             node.colorBlendFactor = 0
             
         }
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         checkTouches(touches)
+        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
         checkTouches(touches)
+        
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -151,6 +176,54 @@ class GameScene: SKScene {
                 firework.removeFromParent()
             }
         }
+        
+    }
+    
+    func explode(firework: SKNode) {
+        if let emmiter = SKEmitterNode(fileNamed: "explode") {
+            emmiter.position = firework.position
+            addChild(emmiter)
+            
+            let waitForDurationAction = SKAction.wait(forDuration: 1)
+            let removeFromParentAction = SKAction.removeFromParent()
+            let sequance = SKAction.sequence([waitForDurationAction, removeFromParentAction])
+            
+            emmiter.run(sequance)
+        }
+        
+        firework.removeFromParent()
+        
+    }
+    
+    func explodeFireworks() {
+        var numExploded = 0
+        
+        for (index, fireworkContainer) in fireworks.enumerated().reversed() {
+            guard let firework = fireworkContainer.children.first as? SKSpriteNode else { continue }
+            
+            if firework.name == "selected" {
+                explode(firework: fireworkContainer)
+                fireworks.remove(at: index)
+                numExploded += 1
+                
+            }
+        }
+        
+        switch numExploded {
+        case 0:
+            break
+        case 1:
+            score += 200
+        case 2:
+            score += 500
+        case 3:
+            score += 1500
+        case 4:
+            score += 2500
+        default:
+            score += 4000
+        }
+        
     }
     
 }
