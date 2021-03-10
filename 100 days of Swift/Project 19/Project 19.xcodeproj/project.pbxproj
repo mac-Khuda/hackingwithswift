@@ -18,6 +18,7 @@
 		4AA7BD3125F1117600205930 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4AA7BD2F25F1117600205930 /* MainInterface.storyboard */; };
 		4AA7BD3525F1117600205930 /* Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4AA7BD2925F1117600205930 /* Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4AA7BD3D25F1154400205930 /* Action.js in Resources */ = {isa = PBXBuildFile; fileRef = 4AA7BD3C25F1154400205930 /* Action.js */; };
+		4AA7BD4125F51E4C00205930 /* SciptsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA7BD4025F51E4C00205930 /* SciptsTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		4AA7BD3025F1117600205930 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		4AA7BD3225F1117600205930 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4AA7BD3C25F1154400205930 /* Action.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Action.js; sourceTree = "<group>"; };
+		4AA7BD4025F51E4C00205930 /* SciptsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SciptsTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 			children = (
 				4AA7BD2B25F1117600205930 /* Media.xcassets */,
 				4AA7BD2D25F1117600205930 /* ActionViewController.swift */,
+				4AA7BD4025F51E4C00205930 /* SciptsTableViewController.swift */,
 				4AA7BD2F25F1117600205930 /* MainInterface.storyboard */,
 				4AA7BD3225F1117600205930 /* Info.plist */,
 				4AA7BD3C25F1154400205930 /* Action.js */,
@@ -237,6 +240,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4AA7BD2E25F1117600205930 /* ActionViewController.swift in Sources */,
+				4AA7BD4125F51E4C00205930 /* SciptsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
