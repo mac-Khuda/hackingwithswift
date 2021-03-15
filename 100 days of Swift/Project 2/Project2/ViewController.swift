@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 class ViewController: UIViewController {
     @IBOutlet weak var button1: UIButton!
@@ -23,6 +24,13 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.badge, .alert, .sound]) { (granted, error) in
+            
+        }
+        
+        sendNotification()
         
         highScore = defaults.integer(forKey: "highScore")
         
@@ -108,6 +116,40 @@ class ViewController: UIViewController {
         }
         
     }
+    
+    func sendNotification() {
+        let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests()
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Don't forget about us"
+        content.body = "Do you remember all the flags? Come'on and check your knowledge!"
+        content.categoryIdentifier = "play"
+        content.sound = .default
+        
+        let date = Date()
+        let calendar = Calendar.current
+        let componentHour = calendar.component(.hour, from: date)
+        let componentMinute = calendar.component(.minute, from: date)
+        let hour = componentHour
+        let minutes = componentMinute
+        
+        print(hour, minutes)
+        
+        var dateComponents = DateComponents()
+        dateComponents.minute = minutes
+        dateComponents.hour = hour
+        
+        let triger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+//        let triger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: triger)
+        
+        center.add(request, withCompletionHandler: nil)
+        
+        
+    }
+    
 }
 
 
