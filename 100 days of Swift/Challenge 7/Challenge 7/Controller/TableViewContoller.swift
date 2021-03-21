@@ -30,11 +30,10 @@ class TableViewContoller: UITableViewController {
         
         notes = realm.objects(Note.self)
         
-        navigationController?.navigationBar.prefersLargeTitles = true
-        title = "Notes"
-        
         navigationController?.navigationBar.tintColor = .orange
         navigationController?.toolbar.tintColor = .orange
+        navigationController?.navigationBar.prefersLargeTitles = true
+        title = "Notes"
         
         notesCountLabel = UILabel()
         notesCountLabel.text = "Notes"
@@ -53,6 +52,10 @@ class TableViewContoller: UITableViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.view.backgroundColor = .clear
+        
         if let notes = notes {
             notesCountLabel.text = "\(notes.count) Notes"
         }
