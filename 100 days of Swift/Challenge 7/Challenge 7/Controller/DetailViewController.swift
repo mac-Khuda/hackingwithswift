@@ -98,11 +98,13 @@ class DetailViewController: UIViewController {
     @objc func deleteNote(note: Note?) {
         textView.text = ""
         navigationController?.popToRootViewController(animated: true)
+        
     }
     
     @objc func shareNote() {
         let activityController = UIActivityViewController(activityItems: [note?.text ?? ""], applicationActivities: [])
         present(activityController, animated: true, completion: nil)
+        
     }
     
     @objc func adjustKeyboard(notification: Notification) {

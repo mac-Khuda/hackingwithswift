@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwipeCellKit
 import RealmSwift
 
 class TableViewContoller: UITableViewController {
@@ -24,7 +25,7 @@ class TableViewContoller: UITableViewController {
     private var notesCountLabel: UILabel!
     
     // MARK: - Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,7 +43,7 @@ class TableViewContoller: UITableViewController {
         let notesCounttoolBarItem = UIBarButtonItem(customView: notesCountLabel)
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let addNewNoteButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(createNewNote))
-
+        
         toolbarItems = [spacer, notesCounttoolBarItem, spacer, addNewNoteButton]
         
         navigationController?.isToolbarHidden = false
@@ -65,11 +66,6 @@ class TableViewContoller: UITableViewController {
         tableView.reloadData()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        view.endEditing(true)
-        
-    }
-    
     // MARK: - Private methods
     
     @objc private func createNewNote() {
@@ -85,6 +81,7 @@ class TableViewContoller: UITableViewController {
         if let vc = storyboard?.instantiateViewController(withIdentifier: Constants.detailViewContollerID) as? DetailViewController {
             vc.note = newNote
             navigationController?.pushViewController(vc, animated: true)
+            
         }
         
     }
@@ -93,10 +90,12 @@ class TableViewContoller: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notes?.count ?? 0
+        
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "note", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "note", for: indexPath) as! SwipeTableViewCell
+        cell.delegate = self
         
         if let note = notes?[indexPath.row] {
             
@@ -112,7 +111,15 @@ class TableViewContoller: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 56
+        
+    }
+    
+    // MARK: - TableView Delegate Methods
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        view.endEditing(true)
         if let vc = storyboard?.instantiateViewController(withIdentifier: Constants.detailViewContollerID) as? DetailViewController {
             vc.note = notes?[indexPath.row]
             navigationController?.pushViewController(vc, animated: true)
@@ -120,8 +127,39 @@ class TableViewContoller: UITableViewController {
         
     }
     
-
-
-
 }
 
+// MARK: - SwipeTableViewCell Delegate Methods
+
+extension TableViewContoller: SwipeTableViewCellDelegate {
+    
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeOptions()
+        options.expansionStyle = .destructiveAfterFill
+        options.transitionStyle = .border
+        return options
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+            do {
+                try self.realm.write() {
+                    self.realm.delete(self.notes![indexPath.row])
+                }
+            } catch {
+                print("Error with deleting node \(error.localizedDescription)")
+            }
+            if let notes = self.notes {
+                self.notesCountLabel.text = "\(notes.count) Notes"
+            }
+        }
+        
+        deleteAction.image = UIImage(systemName: "trash")
+        
+        
+        return [deleteAction]
+        
+    }
+    
+}
