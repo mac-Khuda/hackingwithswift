@@ -243,7 +243,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         #else
         if let accelerometerData = motionManager?.accelerometerData {
-            physicsWorld.gravity = CGVector(dx: accelerometerData.acceleration.y * -50, dy: accelerometerData.acceleration.x * 50)
+            physicsWorld.gravity = CGVector(dx: accelerometerData.acceleration.y * -25, dy: accelerometerData.acceleration.x * 25)
             
         }
         #endif
