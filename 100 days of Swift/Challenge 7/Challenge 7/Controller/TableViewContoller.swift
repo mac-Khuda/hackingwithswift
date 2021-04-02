@@ -53,13 +53,21 @@ class TableViewContoller: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        navigationController?.navigationBar.isTranslucent = true
-        navigationController?.view.backgroundColor = .clear
+        navigationController?.navigationBar.setBackgroundImage(nil, for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = nil
+        
+        navigationController?.toolbar.setBackgroundImage(nil, forToolbarPosition: UIBarPosition.any, barMetrics: UIBarMetrics.default)
+        navigationController?.toolbar.setShadowImage(nil, forToolbarPosition: UIBarPosition.any)
         
         if let notes = notes {
             notesCountLabel.text = "\(notes.count) Notes"
         }
         tableView.reloadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        view.endEditing(true)
+        
     }
     
     // MARK: - Private methods

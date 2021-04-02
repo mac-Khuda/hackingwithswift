@@ -19,6 +19,7 @@ class DetailViewController: UIViewController {
     private var notesManager = NotesManager()
     private var realm = try! Realm()
     
+    private var isDoneButtonAdded = false
     
     // MARK: - Public Properties
     
@@ -48,6 +49,7 @@ class DetailViewController: UIViewController {
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(adjustKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(adjustKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(addButton), name: UIResponder.keyboardWillShowNotification, object: nil)
         
     }
     
@@ -59,6 +61,8 @@ class DetailViewController: UIViewController {
         
         navigationController?.toolbar.setBackgroundImage(UIImage(), forToolbarPosition: UIBarPosition.any, barMetrics: UIBarMetrics.default)
         navigationController?.toolbar.setShadowImage(UIImage(), forToolbarPosition: UIBarPosition.any)
+        
+        isDoneButtonAdded = false
         
     }
     
@@ -97,7 +101,7 @@ class DetailViewController: UIViewController {
     }
     
     @objc func shareNote() {
-        let activityController = UIActivityViewController(activityItems: [note?.text], applicationActivities: [])
+        let activityController = UIActivityViewController(activityItems: [note?.text ?? ""], applicationActivities: [])
         present(activityController, animated: true, completion: nil)
     }
     
@@ -109,6 +113,9 @@ class DetailViewController: UIViewController {
         
         if notification.name == UIResponder.keyboardWillHideNotification {
             textView.contentInset = .zero
+            navigationItem.rightBarButtonItems?.remove(at: 0)
+            isDoneButtonAdded = false
+            
         } else {
             textView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height - view.safeAreaInsets.bottom, right: 0)
         }
@@ -117,6 +124,21 @@ class DetailViewController: UIViewController {
         
         let selectedRange = textView.selectedRange
         textView.scrollRangeToVisible(selectedRange)
+        
+    }
+    
+    @objc func addButton(notification: Notification) {
+        if !isDoneButtonAdded {
+            let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(dismissKeyboard))
+            navigationItem.rightBarButtonItems?.insert(doneButton, at: 0)
+            isDoneButtonAdded = true
+            
+        }
+        
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
         
     }
     
