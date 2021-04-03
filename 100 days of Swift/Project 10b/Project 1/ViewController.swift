@@ -5,6 +5,7 @@
 //  Created by Volodymyr Khuda on 22.12.2020.
 //
 
+import LocalAuthentication
 import UIKit
 
 class ViewController: UICollectionViewController {
@@ -16,11 +17,30 @@ class ViewController: UICollectionViewController {
         title = "Storm Viewer"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(recomendApp))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Authenticate", style: .plain, target: self, action: #selector(authenticate))
         
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            self?.loadPictures()
+        let notificatioCenter = NotificationCenter.default
+        notificatioCenter.addObserver(self, selector: #selector(hidePictures), name: UIApplication.willResignActiveNotification, object: nil)
+        
+        authenticate()
+        
+    }
+    
+    @objc func authenticate() {
+        let context = LAContext()
+        var error: NSError?
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "Identify yourself!"
+            
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { [weak self] (succes, authError) in
+                DispatchQueue.global(qos: .userInitiated).async {
+                    if succes {
+                        self?.loadPictures()
+                    }
+                }
+            }
         }
-        
     }
     
     func loadPictures() {
@@ -74,6 +94,11 @@ class ViewController: UICollectionViewController {
         let vc = UIActivityViewController(activityItems: [recomendation], applicationActivities: [])
         vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
         present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func hidePictures() {
+        pictures.removeAll(keepingCapacity: true)
+        collectionView.reloadData()
     }
     
 }
