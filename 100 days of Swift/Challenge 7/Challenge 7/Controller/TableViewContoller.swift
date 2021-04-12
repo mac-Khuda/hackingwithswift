@@ -94,8 +94,9 @@ class TableViewContoller: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "note", for: indexPath) as! SwipeTableViewCell
-        cell.delegate = self
+        let cell = tableView.dequeueReusableCell(withIdentifier: "note", for: indexPath)
+//            as! SwipeTableViewCell
+//        cell.delegate = self
         
         if let note = notes?[indexPath.row] {
             
@@ -131,35 +132,35 @@ class TableViewContoller: UITableViewController {
 
 // MARK: - SwipeTableViewCell Delegate Methods
 
-extension TableViewContoller: SwipeTableViewCellDelegate {
-    
-    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
-        var options = SwipeOptions()
-        options.expansionStyle = .destructiveAfterFill
-        options.transitionStyle = .border
-        return options
-    }
-    
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        
-        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            do {
-                try self.realm.write() {
-                    self.realm.delete(self.notes![indexPath.row])
-                }
-            } catch {
-                print("Error with deleting node \(error.localizedDescription)")
-            }
-            if let notes = self.notes {
-                self.notesCountLabel.text = "\(notes.count) Notes"
-            }
-        }
-        
-        deleteAction.image = UIImage(systemName: "trash")
-        
-        
-        return [deleteAction]
-        
-    }
-    
-}
+//extension TableViewContoller: SwipeTableViewCellDelegate {
+//
+//    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+//        var options = SwipeOptions()
+//        options.expansionStyle = .destructiveAfterFill
+//        options.transitionStyle = .border
+//        return options
+//    }
+//
+//    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+//
+//        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
+//            do {
+//                try self.realm.write() {
+//                    self.realm.delete(self.notes![indexPath.row])
+//                }
+//            } catch {
+//                print("Error with deleting node \(error.localizedDescription)")
+//            }
+//            if let notes = self.notes {
+//                self.notesCountLabel.text = "\(notes.count) Notes"
+//            }
+//        }
+//
+//        deleteAction.image = UIImage(systemName: "trash")
+//
+//
+//        return [deleteAction]
+//
+//    }
+//
+//}
