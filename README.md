@@ -19,5 +19,5 @@ https://www.hackingwithswift.com/100
 ## Preview
 
 | Projects                                                                                                                                     | Screenshots        |
-| ---                                                                                                                                          |---                 |
-|[Project 1](https://github.com/mac-Khuda/hackingwithswift/tree/master/100%20days%20of%20Swift/Project%201) - *Storm Viewer* (with challenges) |![screen1](100 days of Swift | Classic/Project 1/screenshots/small/screen1.png?raw=true)|
+| ---                                                                                                                                          |:---                 |
+|[Project 1](https://github.com/mac-Khuda/hackingwithswift/tree/master/100%20days%20of%20Swift%20%7C%20Classic/Project%201) - *Storm Viewer* (with challenges) |<img width="65" alt="screen1" src="https://user-images.githubusercontent.com/62836165/115138378-6cdb7f80-a034-11eb-98cc-3e5251453ac3.png">|
